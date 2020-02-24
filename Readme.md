@@ -27,7 +27,7 @@ Forabi eFatura ve eArşiv PHP SDK. PHP ile eArşiv ve eFatura gönderim klavuzu.
 
 # Kurulum
 ```sh
-composer require unlembilisim/foribaapi:dev-master
+composer require ahmeti/foribaapi
 ```
 veya 
 
