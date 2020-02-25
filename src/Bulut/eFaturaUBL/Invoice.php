@@ -74,6 +74,11 @@ class Invoice
     public $OrderReference;
 
     /**
+     * @var \Bulut\eFaturaUBL\DespatchDocumentReference
+     */
+    public $DespatchDocumentReference;
+
+    /**
      * @var |Bulut|eFaturaUBL|BillingReference
      */
     public $BillingReference;
@@ -82,11 +87,6 @@ class Invoice
      * @var \Bulut\eFaturaUBL\AdditionalDocumentReference
      */
     public $AdditionalDocumentReference;
-
-    /**
-     * @var \Bulut\eFaturaUBL\DespatchDocumentReference
-     */
-    public $DespatchDocumentReference;
 
     /**
      * @var |Bulut|eFaturaUBL|Signature
