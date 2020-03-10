@@ -104,6 +104,11 @@ class Invoice
     public $AccountingCustomerParty;
 
     /**
+     * @var \Bulut\eFaturaUBL\PaymentMeans
+     */
+    public $PaymentMeans;
+
+    /**
      * @var \Bulut\eFaturaUBL\AllowanceCharge
      */
     public $AllowanceCharge;
@@ -122,11 +127,6 @@ class Invoice
      * @var \Bulut\eFaturaUBL\BuyerCustomerParty
      */
     public $BuyerCustomerParty;
-
-    /**
-     * @var \Bulut\eFaturaUBL\PaymentMeans
-     */
-    public $PaymentMeans;
 
     /**
      * @var \Bulut\eFaturaUBL\Delivery
