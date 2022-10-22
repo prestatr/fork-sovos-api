@@ -1,33 +1,35 @@
 {
-  "name": "ahmeti/foribaapi",
-  "description": "Sovos Foriba E-Fatura Api",
-  "keywords" : ["efatura", "earsiv", "api", "sovos", "foriba"],
-  "authors": [
-    {
-      "name": "Orhan Gazi Başlı",
-      "email": "obasli@unlembilisim.com",
-      "homepage": "http://unlembilisim.com/"
+    "name": "ahmeti/sovos-api",
+    "description": "Sovos E-Fatura, E-Arşiv, E-İrsaliye Api",
+    "keywords" : ["sovos", "efatura", "earsiv", "eirsaliye", "api"],
+    "authors": [
+        {
+            "name": "Orhan Gazi Başlı",
+            "email": "obasli@unlembilisim.com",
+            "homepage": "http://unlembilisim.com/"
+        },
+        {
+            "name": "Ahmet Imamoglu",
+            "email": "ahmet363@gmail.com",
+            "homepage": "https://ahmetimamoglu.com.tr/"
+        }
+    ],
+    "require": {
+        "php": ">=7.2.5",
+        "guzzlehttp/guzzle": ">=7.0"
     },
-    {
-      "name": "Ahmet Imamoglu",
-      "email": "ahmet363@gmail.com",
-      "homepage": "https://ahmetimamoglu.com.tr/"
-    }
-  ],
-  "require": {
-    "php": ">=7.2.5",
-    "guzzlehttp/guzzle": ">=6.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "Bulut\\FITApi\\": "src/Bulut/FITApi/",
-      "Bulut\\InvoiceService\\": "src/Bulut/InvoiceService/",
-      "Bulut\\ArchiveService\\": "src/Bulut/ArchiveService/",
-      "Bulut\\eFaturaUBL\\": "src/Bulut/eFaturaUBL/",
-      "Bulut\\Exceptions\\": "src/Bulut/Exceptions/"
-    }
-  },
-  "minimum-stability": "stable",
-  "prefer-stable": true,
-  "license": "MIT"
+    "autoload": {
+        "psr-4": {
+            "Bulut\\FITApi\\": "src/Bulut/FITApi/",
+            "Bulut\\InvoiceService\\": "src/Bulut/InvoiceService/",
+            "Bulut\\ArchiveService\\": "src/Bulut/ArchiveService/",
+            "Bulut\\SMMService\\": "src/Bulut/SMMService/",
+            "Bulut\\DespatchService\\": "src/Bulut/DespatchService/",
+            "Bulut\\eFaturaUBL\\": "src/Bulut/eFaturaUBL/",
+            "Bulut\\Exceptions\\": "src/Bulut/Exceptions/"
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "license": "MIT"
 }
