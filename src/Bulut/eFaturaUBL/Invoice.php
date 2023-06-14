@@ -114,6 +114,11 @@ class Invoice
     public $AllowanceCharge;
 
     /**
+     * @var \Bulut\eFaturaUBL\PricingExchangeRate
+     */
+    public $PricingExchangeRate;
+
+    /**
      * @var |Bulut|eFaturaUBL|TaxTotal
      */
     public $TaxTotal;
