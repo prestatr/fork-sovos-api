@@ -1,14 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: orhangazibasli
- * Date: 23.12.2017
- * Time: 00:33
- */
+
 namespace Bulut\FITApi;
+
 use Bulut\Exceptions\GlobalForibaException;
 use Bulut\Exceptions\SchemaValidationException;
 use Bulut\Exceptions\UnauthorizedException;
+use Bulut\InvoiceService\GetRawUserList;
+use Bulut\InvoiceService\GetRawUserListResponse;
 use Bulut\InvoiceService\UBLList;
 use GuzzleHttp\Client;
 use Bulut\InvoiceService\GetEnvelopeStatus;
@@ -346,5 +344,15 @@ class FITInvoiceService {
             $list[] = $responseObj;
         }
         return $list;
+    }
+
+    public function GetRawUserList(GetRawUserList $request): GetRawUserListResponse
+    {
+        $responseText = $this->request($request);
+        $soap = $this->getXml($responseText);
+        $body = $soap->xpath('//s:Body')[0];
+
+        return (new GetRawUserListResponse)
+            ->setDocData($body->getRAWUserListResponse->DocData);
     }
 }
