@@ -27,7 +27,7 @@ Forabi eFatura ve eArşiv PHP SDK. PHP ile eArşiv ve eFatura gönderim klavuzu.
 
 # Kurulum
 ```sh
-composer require ahmeti/foribaapi
+composer require ahmeti/sovos-api
 ```
 veya 
 
@@ -41,7 +41,7 @@ Dosyasının sisteminize dahil ederek eFatura ve eArşiv servislerini kullanmaya
 
  - GuzzleHttp
  - ZipArchive
- - PHP 7.0 veya üzeri.
+ - PHP 8.0 veya üzeri
 
 ## E-Fatura
 
@@ -50,6 +50,18 @@ Yeni nesil E-Fatura göndermek için kullanacağımız sınıf;
 use Bulut\FITApi\FITInvoiceService;
 $service = new \Bulut\FITApi\FITInvoiceService(['username'=> 'WS_KULLANICIADI', 'password'=>'WS_SIFRE'], true);
 // Son parametre, servis TEST ortamında ise true yapabilirsiniz veya boş bırakabilirsiniz
+```
+
+## E-Fatura, E-İrsaliye Kayıtlı Kullanıcılar Listesi (Ham)
+```php
+$getRawUserList = (new \Bulut\InvoiceService\GetRawUserList)
+    ->setIdentifier('SORGULAYAN_PK')
+    ->setVKNTCKN('SORGULAYAN_VKN_TCKN')
+    ->setRole('PK/GB');
+
+$response = $service->GetRawUserList($getRawUserList);
+
+file_put_contents('/path/to/zip-file.zip', base64_decode($response->getDocData()));
 ```
 
 ## E-Fatura Kayıtlı Kullanıcılar Sorgulama
