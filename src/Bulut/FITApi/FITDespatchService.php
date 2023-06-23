@@ -1,36 +1,21 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: orhangazibasli
- * Date: 23.12.2017
- * Time: 00:33
- */
+
 namespace Bulut\FITApi;
+
 use Bulut\DespatchService\GetDesEnvelopeStatus;
 use Bulut\DespatchService\GetDesEnvelopeStatusResponse;
 use Bulut\DespatchService\GetDesUBL;
 use Bulut\DespatchService\GetDesUBLList;
 use Bulut\DespatchService\GetDesUBLListResponse;
 use Bulut\DespatchService\GetDesUBLResponse;
+use Bulut\DespatchService\GetDesUserList;
+use Bulut\DespatchService\GetDesUserListResponse;
 use Bulut\DespatchService\SendDespatch;
 use Bulut\DespatchService\SendDespatchResponse;
 use Bulut\Exceptions\GlobalForibaException;
 use Bulut\Exceptions\SchemaValidationException;
 use Bulut\Exceptions\UnauthorizedException;
-use Bulut\InvoiceService\UBLList;
 use GuzzleHttp\Client;
-use Bulut\InvoiceService\GetEnvelopeStatus;
-use Bulut\InvoiceService\GetEnvelopeStatusResponse;
-use Bulut\InvoiceService\GetUbl;
-use Bulut\InvoiceService\GetUblList;
-use Bulut\InvoiceService\GetUblListResponse;
-use Bulut\InvoiceService\GetUblResponse;
-use Bulut\InvoiceService\GetUserList;
-use Bulut\InvoiceService\GetUserListResponse;
-use Bulut\InvoiceService\GetInvoiceView;
-use Bulut\InvoiceService\GetInvoiceViewResponse;
-use Bulut\InvoiceService\SendUBL;
-use Bulut\InvoiceService\SendUBLResponse;
 
 class FITDespatchService {
     private static $TEST_URL = "https://efaturawstest.fitbulut.com/ClientEDespatchServicePort.svc";
@@ -238,8 +223,6 @@ class FITDespatchService {
         unset($get_variables['methodName']);
         unset($get_variables['soapAction']);
         $xmlMake = $this->makeXml($methodName, $get_variables);
-        dump($xmlMake);
-        logger($xmlMake);
         $this->lastRequest = $xmlMake;
         $this->headers['SOAPAction'] = $soapAction;
         $this->headers['Content-Length'] = strlen($xmlMake);
@@ -250,9 +233,6 @@ class FITDespatchService {
             'verify' => false
         ]);
         $body = $response->getBody()->getContents();
-        dump($body);
-        logger($body);
-
         $this->lastResponse = $body;
         return $body;
     }
@@ -341,6 +321,26 @@ class FITDespatchService {
             $this->fillObj($responseObj, $status);
             $list[] = $responseObj;
         }
+        return $list;
+    }
+
+    public function GetDesUserListRequest(GetDesUserList $request): array
+    {
+        $responseText = $this->request($request);
+        $soap = $this->getXml($responseText);
+        $ubl = $soap->xpath('//s:Body')[0];
+        $list = [];
+
+        if (count($ubl->getDesUserListResponse->DocData) > 1) {
+            foreach ($ubl->getDesUserListResponse->DocData as $data) {
+                $list[] = (new GetDesUserListResponse)
+                    ->setDocData((string)$data);
+            }
+        } else {
+            $list[] = (new GetDesUserListResponse)
+                ->setDocData((string)$ubl->getDesUserListResponse->DocData);
+        }
+
         return $list;
     }
 }
