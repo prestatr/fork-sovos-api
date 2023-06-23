@@ -4,7 +4,7 @@ namespace Bulut\InvoiceService;
 
 class GetRawUserListResponse
 {
-    protected $DocData;
+    protected string $DocData;
 
     public function getDocData(): string
     {

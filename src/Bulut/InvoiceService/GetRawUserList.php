@@ -4,12 +4,12 @@ namespace Bulut\InvoiceService;
 
 class GetRawUserList
 {
-    public $soapAction = "getRAWUserList";
-    public $methodName = "getRAWUserListRequest";
-    public $Identifier;
-    public $VKN_TCKN;
-    public $Role;
-    public $Parameters;
+    protected string $soapAction = 'getRAWUserList';
+    protected string $methodName = 'getRAWUserListRequest';
+    protected string $Identifier;
+    protected string $VKN_TCKN;
+    protected string $Role;
+    protected string $Parameters;
 
     public function setIdentifier(string $Identifier): static
     {
