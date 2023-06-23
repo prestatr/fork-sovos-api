@@ -1,7 +1,8 @@
 {
     "name": "ahmeti/sovos-api",
     "description": "Sovos E-Fatura, E-Arşiv, E-İrsaliye Api",
-    "keywords" : ["sovos", "efatura", "earsiv", "eirsaliye", "api"],
+    "keywords": ["sovos", "efatura", "earsiv", "eirsaliye", "api"],
+    "license": "MIT",
     "authors": [
         {
             "name": "Orhan Gazi Başlı",
@@ -18,6 +19,9 @@
         "php": ">=8.0",
         "guzzlehttp/guzzle": ">=7.0"
     },
+    "require-dev": {
+        "laravel/pint": "^1.10"
+    },
     "autoload": {
         "psr-4": {
             "Bulut\\FITApi\\": "src/Bulut/FITApi/",
@@ -30,6 +34,5 @@
         }
     },
     "minimum-stability": "stable",
-    "prefer-stable": true,
-    "license": "MIT"
+    "prefer-stable": true
 }
