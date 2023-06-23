@@ -352,7 +352,7 @@ class FITInvoiceService
         return $list;
     }
 
-    public function GetRawUserList(GetRawUserList $request): GetRawUserListResponse
+    public function GetRawUserListRequest(GetRawUserList $request): GetRawUserListResponse
     {
         $responseText = $this->request($request);
         $soap = $this->getXml($responseText);

@@ -52,7 +52,7 @@ $getRawUserList = (new \Bulut\InvoiceService\GetRawUserList)
     ->setVKNTCKN('SORGULAYAN_VKN_TCKN')
     ->setRole('PK/GB');
 
-$response = $service->GetRawUserList($getRawUserList);
+$response = $service->GetRawUserListRequest($getRawUserList);
 
 file_put_contents('/path/to/zip-file.zip', base64_decode($response->getDocData()));
 ```
