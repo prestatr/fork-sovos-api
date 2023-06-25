@@ -1,31 +1,31 @@
 ﻿# Sovos E-Fatura, E-Arşiv, E-İrsaliye
 
-## İçerik
+### Giriş
  - [Kurulum](#kurulum)
  - [Gereksinimler](#gereksinimler)
 
-
+ ### E-Fatura İşlemleri
  - [E-Fatura Servisi](#e-fatura-servisi)
- - [E-Fatura, E-İrsaliye Kayıtlı Kullanıcılar Listesi (Zip)](#e-fatura-e-irsaliye-kayıtlı-kullanıcılar-listesi-zip)
+ - [E-Fatura, E-İrsaliye Kayıtlı Kullanıcılar Listesi (Zip)](#e-fatura-e-i̇rsaliye-kayıtlı-kullanıcılar-listesi-zip)
  - [E-Fatura Kayıtlı Kullanıcılar Sorgulama](#e-fatura-kayıtlı-kullanıcılar-sorgulama)
  - [E-Fatura Gelen/Giden Faturaları Sorgulama](#e-fatura-gelengiden-faturaları-sorgulama)
- - [E-Fatura, Gelen/Giden Fatura PDF veya HTML İndirme](#e-fatura-gelengiden-fatura-pdf-veya-html-indirme)
- - [E-Fatura Gelen/Giden Fatura UBL İndirme.](#e-fatura-gelengiden-fatura-ubl-indirme)
+ - [E-Fatura Gelen/Giden Fatura PDF veya HTML İndirme](#e-fatura-gelengiden-fatura-pdf-veya-html-i̇ndirme)
+ - [E-Fatura Gelen/Giden Fatura UBL İndirme](#e-fatura-gelengiden-fatura-ubl-i̇ndirme)
  - [E-Fatura Zarf Sorgulama](#e-fatura-zarf-sorgulama)
- - [E-Fatura Uygulama Yanıtı UBL Oluşturma ( Örnek )](#e-fatura-uygulama-yanıtı-ubl-oluşturma--örnek-)
- - [E-Fatura UBL Oluşturma ( örnek )](#e-fatura-ubl-oluşturma--örnek-)
+ - [E-Fatura Uygulama Yanıtı UBL Oluşturma](#e-fatura-uygulama-yanıtı-ubl-oluşturma)
+ - [E-Fatura UBL Oluşturma](#e-fatura-ubl-oluşturma)
  - [E-Fatura Gönderme](#e-fatura-gönderme)
 
-
- - [E-Arşiv Fatura](#e-arşiv-fatura)
- - [E-Arşiv Fatura Oluşturma](#e-arşiv-fatura-oluşturma)
- - [E-Arşiv Fatura Gönderme](#e-arşiv-fatura-gönderme)
+ ### E-Arşiv İşlemleri
+ - [E-Arşiv Servisi](#e-arşiv-servisi)
+ - [E-Arşiv Kayıtlı Kullanıcılar Listesi (Zip)](#e-arşiv-kayıtlı-kullanıcılar-listesi-zip)
+ - [E-Arşiv Oluşturma](#e-arşiv-oluşturma)
+ - [E-Arşiv Gönderme](#e-arşiv-gönderme)
  - [E-Arşiv Zarf Gönderme](#e-arşiv-zarf-gönderme)
- - [E-Arşiv Fatura İptal Etme](#e-arşiv-fatura-iptal-etme)
- - [E-Arşiv Fatura Tekrar Tetikleme](#e-arşiv-fatura-tekrar-tetikleme)
- - [E-Arşiv Kayıtlı Kullanıcılar Listesi](#e-arşiv-kayıtlı-kullanıcılar-listesi)
- - [E-Arşiv Fatura Görüntüsü İndirme](#e-arşiv-fatura-görüntüsü-indirme)
- - [E-Arşiv Fatura İmzalama](#e-arşiv-fatura-imzalama)
+ - [E-Arşiv İptal Etme](#e-arşiv-i̇ptal-etme)
+ - [E-Arşiv Tekrar Tetikleme](#e-arşiv-tekrar-tetikleme)
+ - [E-Arşiv İndirme](#e-arşiv-i̇ndirme)
+ - [E-Arşiv İmzalama](#e-arşiv-i̇mzalama)
 
 ## Kurulum
 ```sh
@@ -38,11 +38,10 @@ composer require ahmeti/sovos-api
  - PHP 8.0 veya üzeri
 
 ## E-Fatura Servisi
-Yeni nesil E-Fatura göndermek için kullanacağımız sınıf;
 ```php
 use Bulut\FITApi\FITInvoiceService;
 $service = new \Bulut\FITApi\FITInvoiceService(['username'=> 'WS_KULLANICIADI', 'password'=>'WS_SIFRE'], true);
-// Son parametre, servis TEST ortamında ise true yapabilirsiniz veya boş bırakabilirsiniz
+// Son parametre, TEST ortamında ise true yapabilirsiniz veya boş bırakabilirsiniz.
 ```
 
 ## E-Fatura, E-İrsaliye Kayıtlı Kullanıcılar Listesi (Zip)
@@ -58,69 +57,72 @@ file_put_contents('/path/to/zip-file.zip', base64_decode($response->getDocData()
 ```
 
 ## E-Fatura Kayıtlı Kullanıcılar Sorgulama
+Liste halinde kayıtlı kullanıcılar listesini dönecektir. Fonksiyonun daha detaylı açıklamasını Sovos Web Servis Dökümanından edinebilirsiniz.
 ```php
 $userListRequest = new \Bulut\InvoiceService\GetUserList();
 $userListRequest->setIdentifier("SORGULAYAN_PK");
 $userListRequest->setVKNTCKN("SORGULAYAN_VKN_TCKN");
-$userListRequest->setRole("PK/GB");
+$userListRequest->setRole("PK/GB"); // PK, GB
 $userListRequest->setFilterVKNTCKN("SORGULANAN_VKN_TCKN");
 $list = $service->GetUserListRequest($userListRequest);
 ```
 
-Liste halinde kayıtlı kullanıcılar listesini dönecektir. Fonksiyonun daha detaylı açıklamasını Sovos Web Servis Dökümanından edinebilirsiniz.
-
 ## E-Fatura Gelen/Giden Faturaları Sorgulama
+Posta kutunuza gelen faturaları listelemek için tetiklenen fonksiyon. Fonksiyon parametreleri ile ilgili detaylı bilgiyi Sovos E-Fatura Dökümanında bulabilirsiniz.
 ```php
 $getUblRequest = new \Bulut\InvoiceService\GetUblList();
-$getUblRequest->setIdentifier("SORGULAYAN_PK"); // veya GB
+$getUblRequest->setIdentifier("SORGULAYAN_PK"); // SORGULAYAN_PK, SORGULAYAN_GB
 $getUblRequest->setVKNTCKN("SORGULAYAN_VKN_TCKN"); 
-$getUblRequest->setDocType("INVOICE"); // veya ENVOLOPE
-$getUblRequest->setType("INBOUND"); // veya OUTBOUND
+$getUblRequest->setDocType("INVOICE"); // INVOICE, ENVOLOPE
+$getUblRequest->setType("INBOUND"); // INBOUND, OUTBOUND
 $getUblRequest->setFromDate("yyyy-MM-dd");
 $getUblRequest->setToDate(getSession("yyyy-MM-dd"));
 $getUblRequest->setFromDateSpecified(true);
 $getUblRequest->setToDateSpecified(true);
 $list = $service->GetUblListRequest($getUblRequest);
 ```
-Posta kutunuza gelen faturaları listelemek için tetiklenen fonksiyon. Fonksiyon parametreleri ile ilgili detaylı bilgiyi Sovos E-Fatura Dökümanında bulabilirsiniz.
 
-## E-Fatura, Gelen/Giden Fatura PDF veya HTML İndirme
+## E-Fatura Gelen/Giden Fatura PDF veya HTML İndirme
+Seçmiş olduğunuz faturanın PDF veya HTML çıktısını almanızı sağlar. Parametreler ile ilgili daha detaylı bilgiyi Sovos E-Fatura dökümanından inceleyebilirsiniz.
 ```php
 $getInvoiceRequest = new \Bulut\InvoiceService\GetInvoiceView();
 $getInvoiceRequest->setUUID("FATURA_UUID");
-$getInvoiceRequest->setIdentifier("SORGULAYAN_PK"); // veya GB
-$getInvoiceRequest->setVKNTCKN("SORGULAYAN_VKN_TCKN"); // veya GB
-$getInvoiceRequest->setType("INVOICE"); // ENVOLOPE
-$getInvoiceRequest->setDocType("PDF"); // veya PDF, PDF_DEFAULT, HTML
+$getInvoiceRequest->setIdentifier("SORGULAYAN_PK"); // SORGULAYAN_PK, SORGULAYAN_GB
+$getInvoiceRequest->setVKNTCKN("SORGULAYAN_VKN_TCKN");
+$getInvoiceRequest->setType("INVOICE"); // INVOICE, ENVOLOPE
+$getInvoiceRequest->setDocType("PDF"); // PDF, PDF_DEFAULT, HTML
 $data = $service->GetInvoiceViewRequest($getInvoiceRequest);
 ```
-Seçmiş olduğunuz faturanın PDF veya HTML çıktısını almanızı sağlar. Parametreler ile ilgili daha detaylı bilgiyi Sovos E-Fatura dökümanından inceleyebilirsiniz.
 
-## E-Fatura Gelen/Giden Fatura UBL İndirme.
+## E-Fatura Gelen/Giden Fatura UBL İndirme
+Seçmiş olduğunuz faturanın UBL çıktısını almanıza yarar. Parametreler için daha detaylı bilgiyi Sovos E-Fatura Dökümanında bulabilirsiniz.
 ```php
 $getUblRequest = new \Bulut\InvoiceService\GetUbl();
-$getUblRequest->setIdentifier("SORGULAYAN_PK"); // veya GB
+$getUblRequest->setIdentifier("SORGULAYAN_PK"); // SORGULAYAN_PK, SORGULAYAN_GB
 $getUblRequest->setVKNTCKN("SORGULAYAN_VKN_TCKN");
-$getUblRequest->setDocType("INVOICE"); // veya ENVOLOPE
-$getUblRequest->setType("UBL"); // UBL
+$getUblRequest->setDocType("INVOICE"); // INVOICE, ENVOLOPE
+$getUblRequest->setType("UBL");
 $getUblRequest->setUUID("FATURA_UUID");
 $getUblRequest->setParameters("DOC_DATA");
 $data = $service->GetUblRequest($getUblRequest);
 ```
-Seçmiş olduğunuz faturanın UBL çıktısını almanıza yarar. Parametreler için daha detaylı bilgiyi Sovos E-Fatura Dökümanında bulabilirsiniz.
 
 ## E-Fatura Zarf Sorgulama
+Seçilen zarfın durumunu vb. durumları sorgulama ve detaylar için kullanılan fonksiyon. Daha detaylı bilgi için Sovos dökümanına göz atınız.
 ```php
 $getEnvelopeRequest = new \Bulut\InvoiceService\GetEnvelopeStatus();
-$getEnvelopeRequest->setIdentifier("SORGULAYAN_PK"); // veya GB
+$getEnvelopeRequest->setIdentifier("SORGULAYAN_PK"); // SORGULAYAN_PK, SORGULAYAN_GB
 $getEnvelopeRequest->setVKNTCKN("SORGULAYAN_VKN_TCKN");
 $getEnvelopeRequest->setUUID("ZARF_UUID");
-$getEnvelopeRequest->setParameters("DOC_DATA"); // ek parametre
+$getEnvelopeRequest->setParameters("DOC_DATA"); // EK PARAMETRE
 $data = $service->GetEnvelopeStatusRequest($getEnvelopeRequest);
 ```
-Seçilen zarfın durumunu vb. durumları sorgulama ve detaylar için kullanılan fonksiyon. Daha detaylı bilgi için Sovos dökümanına göz atınız.
 
-## E-Fatura Uygulama Yanıtı UBL Oluşturma ( Örnek )
+## E-Fatura Uygulama Yanıtı UBL Oluşturma
+Örnek bir fatura KABUL uygulama yanıtı örneğidir. Örnekte kullanılan alanlar ve isimler GIB ve Sovos standartlarına göre oluşturulmuştur. Alanların anlamı için GIB ve Sovos dökümanlarını inceleyebilirsiniz.
+<details>
+    <summary>Örneği incelemek için tıklayınız.</summary>
+
 ```php
 $appResp = new \Bulut\eFaturaUBL\ApplicationResponse();
 $appResp->UBLVersion = "2.1";
@@ -173,7 +175,6 @@ $receiverParty->PostalAddress = $receiverParty_PostalAddress;
 $appResp->ReceiverParty= $receiverParty;
 
 
-
 $documentResponse = new \Bulut\eFaturaUBL\DocumentResponse();
 
 $documentResponse_Response = new \Bulut\eFaturaUBL\Response();
@@ -193,25 +194,13 @@ $appResp->DocumentResponse = $documentResponse;
 $xmlHelper = new \Bulut\eFaturaUBL\XMLHelper($appResp);
 $xml = $xmlHelper->getApplicationResponseXML();
 ```
+</details>
 
-Örnek bir fatura KABUL uygulama yanıtı örneğidir. Örnekte kullanılan alanlar ve isimler GIB ve Sovos standartlarına göre oluşturulmuştur. Alanların anlam ve kardanitesi için GIB ve Sovos dökümanlarını inceleyebilirsiniz.
+## E-Fatura UBL Oluşturma
+Örnek bir E-Fatura oluşturmuş olduk bu oluşturduğumuz faturayı Sovos servislerine ileterek faturalaştırmış olacağız. Dikkat etmemiz gereken nokta Fatura UUID ve XML olarak çıktı verir UUID ile faturayı takip edebilirsiniz oluşan XML'i de Sovos sistemine iletebilirsiniz. Alan detayları için GIB ve Sovos dökümanlarına bakınız.
+<details>
+    <summary>Örneği incelemek için tıklayınız.</summary>
 
-Dikkat edilmesi gereken nokta SDK içerisinde xml dosyası için attiribute kullanılması gereken yerde ARRAY olarak kullanıyoruz ve key => value olarak gözükmektedir.
-Örnek : 
-```php
-['val'=> "ALICI_VEYA_GONDERICI_TCKN", 'attrs' => ['schemaID="TCKN"']]
-```
-
-Örnekte  alıcının TCKN değerini set ettik. Kurumsal kişi için örnek;
-```php
-['val'=> "ALICI_VEYA_GONDERICI_VKN", 'attrs' => ['schemaID="VKN"']]
-```
-
-attrs parametresi ARRAY olarak set edilir, birden fazla attibute eklenebilir.
-
-Alanlar hakkında daha detaylı bilgi için GIB veya Sovos Dökümanlarını inceleyebilirsiniz.
-
-## E-Fatura UBL Oluşturma ( örnek )
 ```php
 $docRefences = [];
 
@@ -291,8 +280,7 @@ $invoice_AccountSupplierParty->Party = $invoice_AccountSupplierParty_Party;
 $invoice->AccountingSupplierParty = $invoice_AccountSupplierParty;
 
 
-//Customer
-
+// Customer
 $invoice_AccountCustomerParty = new \Bulut\eFaturaUBL\AccountingCustomerParty();
 $invoice_AccountCustomerParty_Party = new \Bulut\eFaturaUBL\Party();
 $invoice_AccountCustomerParty_Party->WebsiteURI = "http://unlembilisim.com";
@@ -305,7 +293,7 @@ $invoice_AccountCustomerParty_Party_Name = new \Bulut\eFaturaUBL\PartyName();
 $invoice_AccountCustomerParty_Party_Name->Name = "GIB";
 $invoice_AccountCustomerParty_Party->PartyName = $invoice_AccountCustomerParty_Party_Name;
 
-# Müşteri eğer gerçek kişi (şahıs şirketi) ise adı ve soyadı gönderilir.
+// Müşteri eğer gerçek kişi (şahıs şirketi) ise adı ve soyadı gönderilir.
 $invoice_AccountCustomerParty_Party_Person = new \Bulut\eFaturaUBL\Person();
 $invoice_AccountCustomerParty_Party_Person->FirstName = "ADI";
 $invoice_AccountCustomerParty_Party_Person->FamilyName = "SOYADI";
@@ -419,9 +407,12 @@ $invoice->InvoiceLine = [$invoice_line];
 
 $xml = new \Bulut\eFaturaUBL\XMLHelper($invoice);
 ```
-Örnek bir E-Fatura oluşturmuş olduk bu oluşturduğumuz faturayı Sovos servislerine ileterek faturalaştırmış olacağız. Dikkat etmemiz gereken nokta Fatura UUID ve XML olarak çıktı verir UUID ile faturayı takip edebilirsiniz oluşan XML'i de Sovos sistemine iletebilirsiniz. Alan detayları için GIB ve Sovos dökümanlarına bakınız.
+</details>
 
 ## E-Fatura Gönderme
+Aşağıda oluşturmuş olduğumuz XML (UBL) dosyası son senaryo olarak faturalaştırmak için Sovos servislerine göndermek için kullandığımız fonksiyon. Burada dikkat edilmesi gereken nokta. Zip dosyası oluşturup bu oluşturduğumuz ZIP dosyası ve fatura UUID aynı olmasıdır ve ZIP dosyasını BASE64 yapıp Sovosya gönderiyoruz ve cevabını alıyoruz.
+
+Genel olarak dikkat etmemiz gerekenler Sovos ve GIB dökümanlarını inceleyerek oradaki isimler ve sınıflarımız aynı isimdedir. UBL oluşturup cevabını alabilirsiniz. 
 ```php
 $destination = 'temp/'.$uuid.'.zip';
 $zip = new ZipArchive();
@@ -443,22 +434,27 @@ unlink($destination);
 
 $result = $service->SendUBLRequest($sendUblRequest);
 ```
-Yukarıda oluşturmuş olduğumuz XML ( UBL )'i son senaryo olarak faturalaştırmak için Sovos servislerine göndermek için kullandığımız fonksiyon. Burada dikkat edilmesi gereken nokta. Zip dosyası oluşturup bu oluşturduğumuz ZIP dosyası ve fatura UUID aynı olmasıdır ve ZIP dosyasını BASE64 yapıp Sovosya gönderiyoruz ve cevabını alıyoruz.
 
-Genel olarak dikkat etmemiz gerekenler Sovos ve GIB dökümanlarını inceleyerek oradaki isimler ve sınıflarımız aynı isimdedir. UBL oluşturup cevabını alabilirsiniz.  
-
-## E-Arşiv Fatura
-E-Arşiv fatura ile E-Fatura arasında ki fark, eFatura mükellefi olmayan kullanıcılara elektronik veya kağıt yoluyla çıktı verilmesi için geliştirilmiş bir çözümdür.
-
-Kullamak için servis sınıfı başlatmamız gerekiyor;
+## E-Arşiv Servisi
 ```php
 use \Bulut\FITApi\FITArchiveService;
 $service = new \Bulut\FITApi\FITArchiveService(['username'=>'EARSIV_WS_Kullanici', 'password'=>'EARSIV_WS_Sifre'], true);
+// Son parametre, TEST ortamında ise true yapabilirsiniz veya boş bırakabilirsiniz.
 ```
 
-Nesneyi oluşturunca son parametresi true yapıldığında test ortamına geçer, silerseniz canlı ortamda çalışır.
+## E-Arşiv Kayıtlı Kullanıcılar Listesi (Zip)
+Kayıtlı kullanıcılar listesini ZIP olarak dönüş yapar.
+```php
+$getDocument = new \Bulut\ArchiveService\GetUserList();
+$getDocument->setVknTckn("GONDERICI_VKN_TCKN");
+$result = $service->GetUserListRequest($getDocument);
+```
 
-## E-Arşiv Fatura Oluşturma
+## E-Arşiv Oluşturma
+Örnek E-Arşiv faturası oluşturmak için kullanılan parametre ve değişkenlerin açıklamaları için Sovos E-Arşiv dökümanına veya GIB dökümanına göz atabilirsiniz.
+<details>
+    <summary>Örneği incelemek için tıklayınız.</summary>
+
 ```php
 $docRefences = [];
 
@@ -537,7 +533,6 @@ $invoice_signature->DigitalSignatureAttachment = $invoice_signature_digital;
 $invoice->Signature = $invoice_signature;
 
 
-
 $invoice_AccountSupplierParty = new \Bulut\eFaturaUBL\AccountingSupplierParty();
 $invoice_AccountSupplierParty_Party = new \Bulut\eFaturaUBL\Party();
 $invoice_AccountSupplierParty_Party->WebsiteURI = "http://unlembilisim.com";
@@ -589,8 +584,7 @@ $invoice_AccountSupplierParty->Party = $invoice_AccountSupplierParty_Party;
 $invoice->AccountingSupplierParty = $invoice_AccountSupplierParty;
 
 
-//Customer
-
+// Customer
 $invoice_AccountCustomerParty = new \Bulut\eFaturaUBL\AccountingCustomerParty();
 $invoice_AccountCustomerParty_Party = new \Bulut\eFaturaUBL\Party();
 $invoice_AccountCustomerParty_Party->WebsiteURI = "http://unlembilisim.com";
@@ -607,7 +601,6 @@ $invoice_AccountCustomerParty_Party_Person = new \Bulut\eFaturaUBL\Person();
 $invoice_AccountCustomerParty_Party_Person->FirstName = "Test";
 $invoice_AccountCustomerParty_Party_Person->FamilyName = "Test";
 $invoice_AccountCustomerParty_Party->Person = $invoice_AccountCustomerParty_Party_Person;
-
 
 
 $invoice_AccountCustomerParty_Party_PostalAdd = new \Bulut\eFaturaUBL\PostalAddress();
@@ -686,10 +679,10 @@ $invoice->InvoiceLine = [$invoice_line];
 
 $xml = new \Bulut\eFaturaUBL\XMLHelper($invoice);
 ```
+</details>
 
-Örnek E-Arşiv faturası oluşturmak için kullanılan parametre ve değişkenlerin açıklamaları için Sovos E-Arşiv dökümanına veya GIB dökümanına göz atabilirsiniz.
-
-## E-Arşiv Fatura Gönderme
+## E-Arşiv Gönderme
+Oluşturmuş olduğumuz E-Arşiv XML'ini Sovos sistemlerine göndermek için kullandığımız fonksiyon.
 ```php
 $destination = 'temp/'.$rand.'.zip';
 $rand = rand(1000,9999);
@@ -719,9 +712,9 @@ $sendUblRequest->setResponsiveOutput($respOut);
 
 $result = $service->SendInvoiceRequest($sendUblRequest);
 ```
-Oluşturmuş olduğumuz E-Arşiv XML'ini Sovos sistemlerine göndermek için kullandığımız fonksiyon.
 
 ## E-Arşiv Zarf Gönderme
+Detaylar için Sovos E-Arşiv dökümanını inceleyebilirsiniz.
 ```php
 $destination = 'temp/'.$rand.'.zip';
 $rand = rand(1000,9999);
@@ -748,9 +741,9 @@ $sendUblRequest->setCustomizationParams([$custParam]);
 
 $result = $service->SendEnvelopeRequest($sendUblRequest);
 ```
-Detaylar için Sovos E-Arşiv dökümanını inceleyebilirsiniz.
 
-## E-Arşiv Fatura İptal Etme
+## E-Arşiv İptal Etme
+Gerekli alanları doldurarak faturayı iptal edebiliriz. Değişkenleri Sovos dökümanından kontrol edebilirsiniz.
 ```php
 $getDocument = new \Bulut\ArchiveService\InvoiceCancelInfoTypeList();
 
@@ -765,9 +758,9 @@ $cancelService = new \Bulut\ArchiveService\CancelInvoice();
 $cancelService->setInvoiceCancelInfoTypeList([$getDocument]);
 $resutl = $service->CancelInvoiceRequest($cancelService);
 ```
-Gerekli alanları doldurarak faturayı iptal edebiliriz. Değişkenleri Sovos dökümanından kontrol edebilirsiniz.
 
-## E-Arşiv Fatura Tekrar Tetikleme
+## E-Arşiv Tekrar Tetikleme
+Gönderilmiş bir faturayı tekrar iletmek için kullanılan fonksiyon CustomParameters için Sovos dökümanlarına göz atınız.
 ```php
 $getDocument = new \Bulut\ArchiveService\RetriggerOperation();
 $getDocument->setVKN("GONDERICI_VKN_TCKN");
@@ -789,30 +782,22 @@ foreach($customParams as $key => $val){
 $getDocument->setCustomizationParams($cust);
 $result = $service->GetRetriggerOperationRequest($getDocument);
 ```
-Gönderilmiş bir faturayı tekrar iletmek için kullanılan fonksiyon CustomParameters için Sovos dökümanlarına göz atınız.
 
-## E-Arşiv Kayıtlı Kullanıcılar Listesi
-```php
-$getDocument = new \Bulut\ArchiveService\GetUserList();
-$getDocument->setVknTckn("GONDERICI_VKN_TCKN");
-$result = $service->GetUserListRequest($getDocument);
-```
-Kayıtlı kullanıcılar listesini ZIP olarak dönüş yapar.
-
-## E-Arşiv Fatura Görüntüsü İndirme
+## E-Arşiv İndirme
+Fonksiyonu tetikleyerek göndermiş olduğunuz faturanın görselini indirebilirsiniz.
 ```php
 $getDocument = new \Bulut\ArchiveService\GetInvoiceDocument();
 $getDocument->setUUID("FATURA_UUID");
 $getDocument->setVkn("GONDERICI_VKN");
 $getDocument->setInvoiceNumber("FATURA_NUMARASI");
 $getDocument->setCustInvId("CUST_INV_ID");
-$getDocument->setOutputType("CIKTI_TURU"); //xml, UBL
+$getDocument->setOutputType("CIKTI_TURU"); // XML, UBL
 
 $result = $service->GetInvoiceDocumentRequest($getDocument);
 ```
-Fonksiyonu tetikleyerek göndermiş olduğunuz faturanın görselini indirebilirsiniz.
 
-## E-Arşiv Fatura İmzalama
+## E-Arşiv İmzalama
+Fonksiyonu tetikleyerek imzalama işlemi gerçekleştirebilirsiniz. SDK'da kullanılan tüm fonksiyon ve değişken isimleri Sovos ve GIB sistemine uygundur. Sovos ve GIB dökümanlarını inceleyerek kolaylıkla entegrasyon sağlayabilirsiniz.
 ```php
 $getDocument = new \Bulut\ArchiveService\GetSignedInvoice();
 $getDocument->setUUID("FATURA_UUID");
@@ -822,6 +807,3 @@ $getDocument->setCustInvId("CUST_INV_ID");
 
 $resutl = $service->GetSignedInvoiceRequest($getDocument);
 ```
-Fonksiyonu tetikleyerek imzalama işlemi gerçekleştirebilirsiniz.
-
-SDK'da kullanılan tüm fonksiyon ve değişken isimleri Sovos ve GIB sistemine uygundur. Sovos ve GIB dökümanlarını inceleyerek kolaylıkla entegrasyon sağlayabilirsiniz.
