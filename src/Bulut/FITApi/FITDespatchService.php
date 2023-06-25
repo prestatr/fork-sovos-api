@@ -17,58 +17,61 @@ use Bulut\Exceptions\SchemaValidationException;
 use Bulut\Exceptions\UnauthorizedException;
 use GuzzleHttp\Client;
 
-class FITDespatchService {
-    private static $TEST_URL = "https://efaturawstest.fitbulut.com/ClientEDespatchServicePort.svc";
-    private static $PROD_URL = "https://efaturaws.fitbulut.com/ClientEDespatchServicePort.svc";
-    private static $URL = "";
-    private  $client;
+class FITDespatchService
+{
+    private static $TEST_URL = 'https://efaturawstest.fitbulut.com/ClientEDespatchServicePort.svc';
+
+    private static $PROD_URL = 'https://efaturaws.fitbulut.com/ClientEDespatchServicePort.svc';
+
+    private static $URL = '';
+
+    private $client;
+
     private $headers = [
         'Content-Type' => 'text/xml;charset=UTF-8',
         'Accept' => 'text/xml',
-        'Cache-Control' =>  'no-cache',
-        'Pragma' => 'no-cache'
+        'Cache-Control' => 'no-cache',
+        'Pragma' => 'no-cache',
     ];
-    private $soapXmlPref = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ein=\"http://foriba.com/eDespatch/\">
+
+    private $soapXmlPref = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ein="http://foriba.com/eDespatch/">
            <soapenv:Header/>
            <soapenv:Body>
            %s
            </soapenv:Body>
             </soapenv:Envelope>
-    ";
-    private $soapSubClassPrefix = "ein";
+    ';
+
+    private $soapSubClassPrefix = 'ein';
 
     private $lastRequest;
+
     private $lastResponse;
 
-    /**
-     * FITInvoiceService constructor.
-     * @param array $options
-     * @param bool $isTest
-     *
-     *
-     */
-    public function __construct($options = [], $isTest = false)
+    public function __construct(array $options = [], bool $isTest = false)
     {
         self::$URL = self::$PROD_URL;
-        if($isTest){
+        if ($isTest) {
             self::$URL = self::$TEST_URL;
         }
         $parsed_url = parse_url(self::$URL);
         $this->headers['Host'] = $parsed_url['host'];
-        $this->headers['Authorization'] = "Basic ".$this->getAuth($options['username'], $options['password']);
+        $this->headers['Authorization'] = 'Basic '.$this->getAuth($options['username'], $options['password']);
         $this->client = new Client();
     }
 
-    public function getLastRequest(){
+    public function getLastRequest()
+    {
         return $this->lastRequest;
     }
 
-    public function getLastResponse(){
+    public function getLastResponse()
+    {
         return $this->lastResponse;
     }
 
     /**
-     * @param string $TEST_URL
+     * @param  string  $TEST_URL
      */
     public static function setTestUrl($TEST_URL)
     {
@@ -76,7 +79,7 @@ class FITDespatchService {
     }
 
     /**
-     * @param string $PROD_URL
+     * @param  string  $PROD_URL
      */
     public static function setProdUrl($PROD_URL)
     {
@@ -84,7 +87,7 @@ class FITDespatchService {
     }
 
     /**
-     * @param string $soapXmlPref
+     * @param  string  $soapXmlPref
      */
     public function setSoapXmlPref($soapXmlPref)
     {
@@ -92,7 +95,7 @@ class FITDespatchService {
     }
 
     /**
-     * @param string $soapSubClassPrefix
+     * @param  string  $soapSubClassPrefix
      */
     public function setSoapSubClassPrefix($soapSubClassPrefix)
     {
@@ -102,121 +105,123 @@ class FITDespatchService {
     /**
      * Basic Auth fonksiyonu.
      *
-     * @param $username
-     * @param $password
      * @return string
      */
-    protected function getAuth($username, $password){
+    protected function getAuth($username, $password)
+    {
         return base64_encode($username.':'.$password);
     }
 
     /**
      * Nesneyi SOAP/XML Çeviren sınıf.
      *
-     * @param $methodName
-     * @param $variables
      * @return string
      */
-    protected  function makeXml($methodName, $variables){
+    protected function makeXml($methodName, $variables)
+    {
 
-        $subXml = "";
-        foreach ($variables as $key => $val){
+        $subXml = '';
+        foreach ($variables as $key => $val) {
 
-            if(is_array($val)){
+            if (is_array($val)) {
                 foreach ($val as $v) {
 
-                    if(is_object($v)){
+                    if (is_object($v)) {
                         $get_variables = get_object_vars($v);
                         $methodName = $get_variables['methodName'];
                         $soapAction = $get_variables['soapAction'];
                         unset($get_variables['methodName']);
                         unset($get_variables['soapAction']);
                         $subXml .= '<'.$this->soapSubClassPrefix.':'.$key.'>';
-                        foreach ($get_variables as $mainKey => $variable){
+                        foreach ($get_variables as $mainKey => $variable) {
 
-                            if(strlen($variable) > 0){
-                                $subXml .= '<'.$this->soapSubClassPrefix.':'.$mainKey.'>'.(string)$variable.'</'.$this->soapSubClassPrefix.':'.$mainKey.'>';
+                            if (strlen($variable) > 0) {
+                                $subXml .= '<'.$this->soapSubClassPrefix.':'.$mainKey.'>'.(string) $variable.'</'.$this->soapSubClassPrefix.':'.$mainKey.'>';
                             }
 
                         }
                         $subXml .= '</'.$this->soapSubClassPrefix.':'.$key.'>';
                         //$subXml = $this->makeXml($methodName, $get_variables);
-                    }
-                    else{
-                        if(strlen($v) > 0)
-                            $subXml .= '<'.$this->soapSubClassPrefix.':'.$key.'>'.(string)$v.'</'.$this->soapSubClassPrefix.':'.$key.'>';
+                    } else {
+                        if (strlen($v) > 0) {
+                            $subXml .= '<'.$this->soapSubClassPrefix.':'.$key.'>'.(string) $v.'</'.$this->soapSubClassPrefix.':'.$key.'>';
+                        }
                     }
 
                 }
-            }else{
-                if(strlen($val) > 0)
-                    $subXml .= '<'.$this->soapSubClassPrefix.':'.$key.'>'.(string)$val.'</'.$this->soapSubClassPrefix.':'.$key.'>';
+            } else {
+                if (strlen($val) > 0) {
+                    $subXml .= '<'.$this->soapSubClassPrefix.':'.$key.'>'.(string) $val.'</'.$this->soapSubClassPrefix.':'.$key.'>';
+                }
             }
         }
         $treeXml = '<'.$this->soapSubClassPrefix.':'.$methodName.'>'.$subXml.'</'.$this->soapSubClassPrefix.':'.$methodName.'>';
         $mainXml = sprintf($this->soapXmlPref, $treeXml);
+
         return trim($mainXml);
     }
 
     /**
      * Foribadan gelene cevabı işleyen SOAP/XML sınıfı.
      *
-     * @param $responseText
      * @return \SimpleXMLElement
+     *
      * @throws GlobalForibaException
      * @throws SchemaValidationException
      * @throws UnauthorizedException
      * @throws \Exception
      */
-    protected  function getXml($responseText){
+    protected function getXml($responseText)
+    {
         $soap = simplexml_load_string($responseText);
         $soap->registerXPathNamespace('s', 'http://schemas.xmlsoap.org/soap/envelope/');
-        if(isset($soap->xpath('//s:Body/s:Fault')[0])){
+        if (isset($soap->xpath('//s:Body/s:Fault')[0])) {
             $fault = $soap->xpath('//s:Body/s:Fault')[0];
 
-            if($fault->faultstring == "Unauthorized")
-                throw new UnauthorizedException($fault->faultstring, (int)$fault->faultcode);
-            else if($fault->faultstring == "Şema validasyon hatası")
-            {
+            if ($fault->faultstring == 'Unauthorized') {
+                throw new UnauthorizedException($fault->faultstring, (int) $fault->faultcode);
+            } elseif ($fault->faultstring == 'Şema validasyon hatası') {
                 $message = $soap->xpath('//s:Body/s:Fault/detail');
-                if(isset($message[0])){
-                    throw  new SchemaValidationException($message[0]->ProcessingFault->Message, (int)$message[0]->ProcessingFault->Code);
+                if (isset($message[0])) {
+                    throw new SchemaValidationException($message[0]->ProcessingFault->Message, (int) $message[0]->ProcessingFault->Code);
+                } else {
+                    throw new SchemaValidationException('Bilinmeyen bir şema hatası oluştu.');
                 }
-                else
-                    throw  new SchemaValidationException('Bilinmeyen bir şema hatası oluştu.');
-            }
-            else if($fault->faultcode == "s:Server"){
+            } elseif ($fault->faultcode == 's:Server') {
                 $message = $soap->xpath('//s:Body/s:Fault/detail');
 
-                if(isset($message[0])){
+                if (isset($message[0])) {
                     $fault->faultstring = $message[0]->ProcessingFault->Message;
                     $fault->faultcode = $message[0]->ProcessingFault->Code;
                 }
-                if($fault->faultcode == "s:Server")
+                if ($fault->faultcode == 's:Server') {
                     $fault->faulcode = 0;
+                }
 
-                throw new GlobalForibaException($fault->faultstring, (int)$fault->faultcode);
+                throw new GlobalForibaException($fault->faultstring, (int) $fault->faultcode);
+            } else {
+                throw new \Exception("Fatal Error : Code '".$fault->faultcode."', Message '".$fault->faultstring."' [".$responseText.'].');
             }
-            else
-                throw new \Exception("Fatal Error : Code '".$fault->faultcode."', Message '".$fault->faultstring."' [".$responseText."].");
         }
+
         return $soap;
     }
 
-    protected  function fillObj(&$object, $data){
+    protected function fillObj(&$object, $data)
+    {
         $vars = get_object_vars($object);
-        foreach ($vars as $key => $val){
-            $object->{$key} = (string)$data->{$key};
+        foreach ($vars as $key => $val) {
+            $object->{$key} = (string) $data->{$key};
         }
     }
 
     /**
      * İstekleri Foriba üzerine iletmeye yardımcı fonksiyon.
      *
-     * @param $request
      * @return mixed
      */
-    protected function request($request){
+    protected function request($request)
+    {
         $get_variables = get_object_vars($request);
         $methodName = $get_variables['methodName'];
         $soapAction = $get_variables['soapAction'];
@@ -230,97 +235,104 @@ class FITDespatchService {
             'headers' => $this->headers,
             'body' => $xmlMake,
             'http_errors' => false,
-            'verify' => false
+            'verify' => false,
         ]);
         $body = $response->getBody()->getContents();
         $this->lastResponse = $body;
+
         return $body;
     }
 
     /**
-     * @param GetDesUBLList $request
      * @return array GetDesUBLListResponse
+     *
      * @throws
      */
-    public function GetUblListRequest(GetDesUBLList $request){
+    public function GetUblListRequest(GetDesUBLList $request)
+    {
         $responseText = $this->request($request);
 
         $soap = $this->getXml($responseText);
         $ublList = $soap->xpath('//s:Body')[0];
         $list = [];
-        foreach ($ublList->getDesUBLListResponse->Response as $ubl){
+        foreach ($ublList->getDesUBLListResponse->Response as $ubl) {
             $responseObj = new GetDesUBLListResponse();
             $this->fillObj($responseObj, $ubl);
             $list[] = $responseObj;
         }
+
         return $list;
     }
 
     /**
-     * @param GetDesUBL $request
      * @return array
+     *
      * @throws
      */
-    public function GetUblRequest(GetDesUBL $request){
+    public function GetUblRequest(GetDesUBL $request)
+    {
         $responseText = $this->request($request);
         $soap = $this->getXml($responseText);
         $ubl = $soap->xpath('//s:Body')[0];
         $list = [];
 
-        if(count($ubl->getDesUBLResponse->Response) > 1){
+        if (count($ubl->getDesUBLResponse->Response) > 1) {
 
-            foreach ($ubl->getDesUBLResponse->Response as $data){
+            foreach ($ubl->getDesUBLResponse->Response as $data) {
 
                 $responseObj = new GetDesUBLResponse();
-                $responseObj->DocData = (string)$data->DocData;
+                $responseObj->DocData = (string) $data->DocData;
                 $responseObj->setDocType($request->Parameters);
                 $list[] = $responseObj;
             }
-        }else{
+        } else {
             $responseObj = new GetDesUBLResponse();
-            $responseObj->DocData = (string)$ubl->getDesUBLResponse->Response->DocData;
+            $responseObj->DocData = (string) $ubl->getDesUBLResponse->Response->DocData;
             $responseObj->setDocType($request->Parameters);
             $list[] = $responseObj;
         }
 
-
         return $list;
     }
 
     /**
-     * @param GetDesEnvelopeStatus $request
      * @return array GetDesEnvelopeStatusResponse
+     *
      * @throws
      */
-    public function GetDesEnvelopeStatusRequest(GetDesEnvelopeStatus $request){
+    public function GetDesEnvelopeStatusRequest(GetDesEnvelopeStatus $request)
+    {
         $responseText = $this->request($request);
         $soap = $this->getXml($responseText);
 
         $ublList = $soap->xpath('//s:Body')[0];
         $list = [];
-        foreach ($ublList->getDesEnvelopeStatusResponse->Response as $status){
+        foreach ($ublList->getDesEnvelopeStatusResponse->Response as $status) {
             $responseObj = new GetDesEnvelopeStatusResponse();
             $this->fillObj($responseObj, $status);
             $list[] = $responseObj;
         }
+
         return $list;
     }
 
     /**
-     * @param SendDespatch $request
      * @return array SendDespatchResponse
+     *
      * @throws
      */
-    public function SendUBLRequest(SendDespatch $request){
+    public function SendUBLRequest(SendDespatch $request): array
+    {
         $responseText = $this->request($request);
         $soap = $this->getXml($responseText);
         $ublList = $soap->xpath('//s:Body')[0];
         $list = [];
-        foreach ($ublList->sendDesUBLResponse->Response as $status){
+        foreach ($ublList->sendDesUBLResponse->Response as $status) {
             $responseObj = new SendDespatchResponse();
             $this->fillObj($responseObj, $status);
             $list[] = $responseObj;
         }
+
         return $list;
     }
 
@@ -334,11 +346,11 @@ class FITDespatchService {
         if (count($ubl->getDesUserListResponse->DocData) > 1) {
             foreach ($ubl->getDesUserListResponse->DocData as $data) {
                 $list[] = (new GetDesUserListResponse)
-                    ->setDocData((string)$data);
+                    ->setDocData((string) $data);
             }
         } else {
             $list[] = (new GetDesUserListResponse)
-                ->setDocData((string)$ubl->getDesUserListResponse->DocData);
+                ->setDocData((string) $ubl->getDesUserListResponse->DocData);
         }
 
         return $list;
