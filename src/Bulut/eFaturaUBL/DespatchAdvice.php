@@ -24,6 +24,8 @@ class DespatchAdvice
 
     public int $LineCountNumeric;
 
+    public array $Note;
+
     /**
      * @var \Bulut\eFaturaUBL\OrderReference
      */
