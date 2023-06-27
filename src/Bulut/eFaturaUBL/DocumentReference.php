@@ -1,19 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: orhangazibasli
- * Date: 24.12.2017
- * Time: 02:11
- */
 
 namespace Bulut\eFaturaUBL;
-
 
 /**
  * Referans verilen ya da eklenen belgelere ilişkin bilgiler girilecektir
  *
  * Class DocumentReference
- * @package Bulut\eFaturaUBL
  */
 class DocumentReference
 {
@@ -50,7 +42,7 @@ class DocumentReference
      *
      * @var string
      */
-    public $DocumentDesciption;
+    public $DocumentDescription;
 
     /**
      * Ek belgeler.
@@ -72,6 +64,4 @@ class DocumentReference
      * @var IssuerParty
      */
     public $IssuerParty;
-
-
 }
