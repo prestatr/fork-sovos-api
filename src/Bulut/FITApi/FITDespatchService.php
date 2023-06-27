@@ -10,6 +10,8 @@ use Bulut\DespatchService\GetDesUBLListResponse;
 use Bulut\DespatchService\GetDesUBLResponse;
 use Bulut\DespatchService\GetDesUserList;
 use Bulut\DespatchService\GetDesUserListResponse;
+use Bulut\DespatchService\GetDesView;
+use Bulut\DespatchService\GetDesViewResponse;
 use Bulut\DespatchService\SendDespatch;
 use Bulut\DespatchService\SendDespatchResponse;
 use Bulut\Exceptions\GlobalForibaException;
@@ -34,7 +36,7 @@ class FITDespatchService
         'Pragma' => 'no-cache',
     ];
 
-    private $soapXmlPref = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ein="http://foriba.com/eDespatch/">
+    private $soapXmlPref = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:edes="http://foriba.com/eDespatch/">
            <soapenv:Header/>
            <soapenv:Body>
            %s
@@ -42,7 +44,7 @@ class FITDespatchService
             </soapenv:Envelope>
     ';
 
-    private $soapSubClassPrefix = 'ein';
+    private $soapSubClassPrefix = 'edes';
 
     private $lastRequest;
 
@@ -127,11 +129,9 @@ class FITDespatchService
                 foreach ($val as $v) {
 
                     if (is_object($v)) {
+
                         $get_variables = get_object_vars($v);
-                        $methodName = $get_variables['methodName'];
-                        $soapAction = $get_variables['soapAction'];
-                        unset($get_variables['methodName']);
-                        unset($get_variables['soapAction']);
+
                         $subXml .= '<'.$this->soapSubClassPrefix.':'.$key.'>';
                         foreach ($get_variables as $mainKey => $variable) {
 
@@ -141,7 +141,7 @@ class FITDespatchService
 
                         }
                         $subXml .= '</'.$this->soapSubClassPrefix.':'.$key.'>';
-                        //$subXml = $this->makeXml($methodName, $get_variables);
+
                     } else {
                         if (strlen($v) > 0) {
                             $subXml .= '<'.$this->soapSubClassPrefix.':'.$key.'>'.(string) $v.'</'.$this->soapSubClassPrefix.':'.$key.'>';
@@ -155,6 +155,7 @@ class FITDespatchService
                 }
             }
         }
+
         $treeXml = '<'.$this->soapSubClassPrefix.':'.$methodName.'>'.$subXml.'</'.$this->soapSubClassPrefix.':'.$methodName.'>';
         $mainXml = sprintf($this->soapXmlPref, $treeXml);
 
@@ -351,6 +352,22 @@ class FITDespatchService
         } else {
             $list[] = (new GetDesUserListResponse)
                 ->setDocData((string) $ubl->getDesUserListResponse->DocData);
+        }
+
+        return $list;
+    }
+
+    public function GetDesViewRequest(GetDesView $request): array
+    {
+        $responseText = $this->request($request);
+        $soap = $this->getXml($responseText);
+        $ubl = $soap->xpath('//s:Body')[0];
+        $list = [];
+        $responses = count($ubl->getDesViewResponse->Response) > 1 ? $ubl->getDesViewResponse->Response : [$ubl->getDesViewResponse->Response];
+        foreach ($responses as $response) {
+            $responseObj = new GetDesViewResponse();
+            $this->fillObj($responseObj, $response);
+            $list[] = $responseObj;
         }
 
         return $list;
