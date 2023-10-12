@@ -1,103 +1,103 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: orhangazibasli
- * Date: 23.12.2017
- * Time: 17:50
- */
 
 namespace Bulut\InvoiceService;
 
-
 class GetUblList
 {
-    public $soapAction = "getUBLList";
-    public $methodName = "getUBLListRequest";
-    public $Identifier;
-    public $VKN_TCKN;
+    public string $soapAction = 'getUBLList';
+
+    public string $methodName = 'getUBLListRequest';
+
+    public string $Identifier;
+
+    public string $VKN_TCKN;
+
     public $UUID;
+
     public $DocType;
+
     public $Type;
+
     public $FromDate;
+
     public $ToDate;
+
     public $FromDateSpecified;
+
     public $ToDateSpecified;
 
-    /**
-     * @param mixed $Identifier
-     */
-    public function setIdentifier($Identifier)
+    public function setIdentifier(string $Identifier): static
     {
         $this->Identifier = $Identifier;
+
+        return $this;
     }
 
-    /**
-     * @param mixed $VKN_TCKN
-     */
-    public function setVKNTCKN($VKN_TCKN)
+    public function setVKNTCKN(string $VKN_TCKN): static
     {
         $this->VKN_TCKN = $VKN_TCKN;
+
+        return $this;
     }
 
-    /**
-     * @param mixed $UUID
-     */
-    public function setUUID($UUID)
+    public function setUUID(string $UUID): static
     {
         $this->UUID = $UUID;
+
+        return $this;
     }
 
     /**
-     * @param mixed $DocType
+     * INVOICE, ENVOLOPE
      */
-    public function setDocType($DocType)
+    public function setDocType(string $DocType): static
     {
         $this->DocType = $DocType;
+
+        return $this;
     }
 
     /**
-     * @param mixed $Type
+     * INBOUND, OUTBOUND
      */
-    public function setType($Type)
+    public function setType(string $Type): static
     {
         $this->Type = $Type;
+
+        return $this;
     }
 
     /**
-     * @param mixed $FromDate
+     * 2020-01-01T00:00:00+03:00
      */
-    public function setFromDate($FromDate)
+    public function setFromDate(string $FromDate): static
     {
-        $this->FromDate = date('c', strtotime($FromDate));
+        $this->FromDate = $FromDate;
+
+        return $this;
     }
 
     /**
-     * @param mixed $ToDate
+     * 2020-01-01T23:59:59+03:00
      */
-    public function setToDate($ToDate)
+    public function setToDate(string $ToDate): static
     {
-        $this->ToDate = date('c', strtotime($ToDate));
+        $this->ToDate = $ToDate;
+
+        return $this;
     }
 
-    /**
-     * @param mixed $FromDateSpecified
-     */
-    public function setFromDateSpecified($FromDateSpecified)
+    public function setFromDateSpecified(bool $FromDateSpecified): static
     {
         $this->FromDateSpecified = $FromDateSpecified;
+
+        return $this;
     }
 
-    /**
-     * @param mixed $ToDateSpecified
-     */
-    public function setToDateSpecified($ToDateSpecified)
+    public function setToDateSpecified(bool $ToDateSpecified): static
     {
         $this->ToDateSpecified = $ToDateSpecified;
+
+        return $this;
     }
-
-
-
-
-
-
 }
